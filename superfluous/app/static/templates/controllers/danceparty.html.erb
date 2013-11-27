@@ -1,21 +1,27 @@
 <% set_default("dancers", []) %>
 
-<div class="clearfix">
-  <div id="dances">
-    <% _.each(dancers, function(dancer) { %>
-      <img class="dancer" src="dance/<%= dance %>" title="">
-    <% }); %>
+<div class="clearfix container-fluid">
+  <div class="row-fluid">
+    <div class="photobooth_wrapper">
+      <div id="photobooth" class="clearfix">
+        <h1>show me your moves!</h1>
+        <div id="preview">
+          <img class="gif">
+        </div>
+        <button id="hide-booth">no.</button>
+        <button id="start-camera">start the camera!</button>
+        <button id="record">let's dance!</button>
+        <button id="redo-gif">redo</button>
+        <button id="upload-gif">upload</button>
+      </div>
+    </div>
+  </div>
+  <div class="row-fluid" style="text-align: center">
+    <div class="span4">
+      <% _.each(dancers, function(dance) { %>
+        <img class="dancer" src="danceparty/<%= dance %>" title="">
+      <% }); %>
+    </div>
   </div>
 
-  <div id="photobooth" class="clearfix">
-    <h1>show me your moves!</h1>
-    <div id="preview">
-      <img class="gif">
-    </div>
-    <button id="hide-booth">no.</button>
-    <button id="start-camera">start the camera!</button>
-    <button id="record">let's dance!</button>
-    <button id="redo-gif">redo</button>
-    <button id="upload-gif">upload</button>
-  </div>
 </div>

@@ -126,6 +126,7 @@ var Booth = {
 
     this.$preview = this.$page.find("#preview");
     this.$photobooth = this.$page.find("#photobooth");
+    this.$photobooth_wrapper = this.$page.find(".photobooth_wrapper");
 
     // Why we gotta copy this?
     this.show();
@@ -147,10 +148,12 @@ var Booth = {
 
   show: function() {
     this.$photobooth.addClass('active');
+    this.$photobooth_wrapper.show();
   },
 
   hide: function(el) {
     this.$photobooth.removeClass('active');
+    this.$photobooth_wrapper.hide();
   },
 
   setState: function(state, progress) {

@@ -55,6 +55,15 @@ button {
   }
 }
 
+.photobooth_wrapper {
+  position: absolute;
+  background: white;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
 #photobooth {
   @padding: 25px;
   position: absolute;
@@ -66,7 +75,6 @@ button {
   width: 320px;
   height: 370px;
   padding: @padding;
-  background: white;
   border-radius: 10px;
   box-shadow:
     0 0 25px black,
