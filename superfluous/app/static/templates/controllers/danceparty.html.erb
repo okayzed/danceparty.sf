@@ -1,0 +1,21 @@
+<% set_default("dancers", []) %>
+
+<div class="clearfix">
+  <div id="dances">
+    <% _.each(dancers, function(dancer) { %>
+      <img class="dancer" src="dance/<%= dance %>" title="">
+    <% }); %>
+  </div>
+
+  <div id="photobooth" class="clearfix">
+    <h1>show me your moves!</h1>
+    <div id="preview">
+      <img class="gif">
+    </div>
+    <button id="hide-booth">no.</button>
+    <button id="start-camera">start the camera!</button>
+    <button id="record">let's dance!</button>
+    <button id="redo-gif">redo</button>
+    <button id="upload-gif">upload</button>
+  </div>
+</div>
