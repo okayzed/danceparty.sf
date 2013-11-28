@@ -10,6 +10,8 @@ var context = require_core("server/context");
 var template = require_core("server/template");
 var quick_hash = require_core("server/hash");
 
+var formidable = require('formidable');
+
 // Helpers for serialized form elements
 var value_of = controller.value_of,
     array_of = controller.array_of;
@@ -32,16 +34,11 @@ module.exports = {
     var req = context("req");
     var res = context("res");
 
-    var gif_file = req.files.moves;
-    console.log("RECEIVED A NEW GIF!", gif_file.path);
-    imagemagick.identify(gif_file.path, context.wrap(function(err, data) {
-      if (err) {
-        console.log("COULDNT READ IMAGE DATA", err);
-        res.write();
-        return;
-      }
-
-      if (data.format.toLowerCase() !== "gif") {
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+      var gif_file = files.moves;
+      console.log("RECEIVED A NEW GIF!", gif_file.path);
+      if (gif_file.type.toLowerCase() !== "image/gif") {
         res.end();
         return;
       }
@@ -50,6 +47,7 @@ module.exports = {
         if (!err) {
           var body = data.toString();
           var hash = quick_hash(body);
+          console.log("HASHED TO", hash);
           var is = fs.createReadStream(gif_file.path);
           var os = fs.createWriteStream(upload_dir + hash + ".gif");
 
@@ -64,7 +62,7 @@ module.exports = {
         }
       }));
 
-    }));
+    });
 
 
   },
