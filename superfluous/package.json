@@ -17,7 +17,8 @@
       "async" : "x",
       "less" : "x",
       "json-stable-stringify" : "x",
-      "highlight.js" : "x"
+      "highlight.js" : "x",
+      "imagemagick" : "x"
     }
 }
 
