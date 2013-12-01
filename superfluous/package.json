@@ -1,24 +1,12 @@
 {
-  "name": "superfluous",
-    "description": "a node.js server/client understanding",
+  "name": "danceparty.sf",
+    "description": "a dance party!",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-      "express": "3.x",
-      "socket.io": "0.9.x",
-      "cheerio" : "0.10.x",
-      "module-grapher": "x",
-      "passport": "x",
-      "passport-local": "x",
-      "mongodb" : "x",
-      "connect-mongo" : "x",
-      "longjohn" : "x",
-      "Faker" : "x",
-      "async" : "x",
-      "less" : "x",
-      "json-stable-stringify" : "x",
-      "highlight.js" : "x",
-      "imagemagick" : "x"
+      "superfluous" : "x",
+      "imagemagick" : "x",
+      "formidable" : "x"
     }
 }
 
