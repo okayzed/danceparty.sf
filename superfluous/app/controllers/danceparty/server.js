@@ -30,9 +30,9 @@ module.exports = {
     "/upload" : "upload"
   },
 
-  upload: function() {
-    var req = context("req");
-    var res = context("res");
+  upload: function(ctx, api) {
+    var req = ctx.req;
+    var res = ctx.res;
 
     var socket = this.get_socket();
     var form = new formidable.IncomingForm();
@@ -88,6 +88,8 @@ module.exports = {
       if (!err) {
         res.setHeader('Content-Type', 'image/gif');
         res.setHeader('Content-Length', stat.size);
+        var maxAge = 60 * 60 * 1000 * 24 * 365;
+        res.setHeader('Cache-Control', 'public, max-age=' + (maxAge / 1000));
         fs.createReadStream(upload_dir + dance_id).pipe(res);
       } else {
         res.end();
