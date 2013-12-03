@@ -34,6 +34,7 @@ module.exports = {
     var req = context("req");
     var res = context("res");
 
+    var socket = this.get_socket();
     var form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
       var gif_file = files.moves;
@@ -56,6 +57,7 @@ module.exports = {
             fs.unlinkSync(gif_file.path);
             res.write(hash + ".gif");
             res.end();
+            socket.emit("new_gif", hash);
           }));
         } else {
           res.end();
@@ -90,6 +92,7 @@ module.exports = {
       } else {
         res.end();
       }
+
 
     }));
   },

@@ -100,7 +100,6 @@ var Recorder = {
   },
 
   onUploaded: function() {
-    this.booth.addDance(URL.createObjectURL(this.blob))
     this._reset()
     camera.stop()
     this.booth.hide()
@@ -157,7 +156,6 @@ var Booth = {
   },
 
   setState: function(state, progress) {
-    console.log(this.$el);
     this.$photobooth.removeClass('state-' + this.state)
     this.state = state
     this.$photobooth.addClass('state-' + state)
@@ -181,6 +179,11 @@ var Booth = {
           .clone()
           .prop('src', dance)
     );
+  },
+  socket: function(socket) {
+    socket.on('new_gif', function(data) {
+      Booth.addDance("/danceparty/" + data + ".gif");
+    });
   }
 };
 // todo: confirm before uploading
