@@ -131,6 +131,7 @@ var Booth = {
     this.show();
     this.setState('no-camera');
     Recorder.set_booth(this);
+    scale_gifs_to_window();
   },
   start_camera: function() {
     Recorder.init();
@@ -174,11 +175,10 @@ var Booth = {
   },
 
   addDance: function(dance) {
-    $('#dances').prepend(
-        $('#dances :first-child')
-          .clone()
-          .prop('src', dance)
-    );
+    var firstEl = $('#dances .dance:first-child');
+    var clonedEl = firstEl.clone();
+    clonedEl.find("img").prop('src', dance);
+    $('#dances').prepend(clonedEl);
   },
   socket: function(socket) {
     socket.on('new_gif', function(data) {
@@ -186,6 +186,46 @@ var Booth = {
     });
   }
 };
-// todo: confirm before uploading
+
+// The dance grid should scale its elements based on the size of the viewport
+function scale_gifs_to_window() {
+  var width = $(window).width();
+  var height = $(window).height();
+
+  // some GIF sizes...
+  var preferred_sizes = [ 280, 300, 350, 400, 450, 500, 300, 500 ];
+  var operated = false;
+  _.each(preferred_sizes, function(s) {
+    if (operated) {
+      return;
+    }
+
+
+    var gif_number = parseInt(width / s, 10);
+    var gif_size = width / gif_number;
+    var big_gif_size = width / (gif_number - 1);
+
+    var delta = Math.abs(gif_size - s);
+    if (delta < 40) {
+      $("img.dancer").width(gif_size);
+      // we did it, time to move on
+      operated = true;
+    }
+
+    delta = Math.abs(big_gif_size - s);
+    if (delta < 40 && !operated) {
+      $("img.dancer").width(big_gif_size);
+      // we did it, time to move on
+      operated = true;
+    }
+  });
+
+}
+
+$("body").css("overflow", "hidden");
+
+$(window).on('resize', _.throttle(function() {
+  scale_gifs_to_window();
+}, 200, { leading: false }));
 
 module.exports = Booth;

@@ -16,9 +16,11 @@
       </div>
     </div>
   </div>
-  <div class="clearfix" style="text-align: center" id="dances">
+  <div class="clearfix" style="overflow: hide" id="dances">
       <% _.each(dancers, function(dance) { %>
-          <img class="mtl dancer span4" src="danceparty/<%= dance %>" title="" />
+        <div class="dance">
+          <img class="dancer" src="danceparty/<%= dance %>" title="" />
+        </div>
       <% }); %>
   </div>
 
