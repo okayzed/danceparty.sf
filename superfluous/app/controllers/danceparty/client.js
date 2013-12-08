@@ -191,9 +191,10 @@ var Booth = {
 function scale_gifs_to_window() {
   var width = $(window).width();
   var height = $(window).height();
+  console.log("SCALING GIFS TO WINDOW", width, height);
 
   // some GIF sizes...
-  var preferred_sizes = [ 280, 300, 350, 400, 450, 500, 300, 500 ];
+  var preferred_sizes = [ 300, 280, 350, 400, 450, 500, 300, 500 ];
   var operated = false;
   _.each(preferred_sizes, function(s) {
     if (operated) {
@@ -206,7 +207,7 @@ function scale_gifs_to_window() {
     var big_gif_size = width / (gif_number - 1);
 
     var delta = Math.abs(gif_size - s);
-    if (delta < 40) {
+    if (delta < 50) {
       $("img.dancer").width(gif_size);
       // we did it, time to move on
       operated = true;
