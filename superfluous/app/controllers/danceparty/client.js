@@ -115,6 +115,7 @@ var Recorder = {
 var Booth = {
   events: {
     "click #hide-booth" : "hide",
+    "click #show-booth" : "show",
     "click #start-camera" : "start_camera",
     "click #record" : "record",
     "click #upload-gif" : "upload",
@@ -141,6 +142,7 @@ var Booth = {
   },
   upload: function() {
     Recorder.upload();
+    $("#show-booth").hide();
   },
   redo: function() {
     Recorder.redo();
