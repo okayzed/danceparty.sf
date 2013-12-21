@@ -19,9 +19,13 @@
   <div class="clearfix" style="overflow: hide" id="dances">
       <% _.each(dancers, function(dance) { %>
         <div class="dance">
-          <img class="dancer" src="danceparty/<%= dance %>" title="" />
+          <img class="dancer" src="<%= url_for({path: dance }) %>" title="" />
         </div>
       <% }); %>
+
+      <div class="dance">
+        <img class="dancer" src="" title="" />
+      </div>
   </div>
 
 

@@ -84,8 +84,10 @@ var Recorder = {
     var formData = new FormData()
     formData.append('moves', this.blob)
 
+    var url = (Booth.path) + '/upload';
+
     $.ajax({
-        url: '/danceparty/upload',
+        url: url,
         type: 'POST',
         data: formData,
         cache: false,
@@ -134,6 +136,9 @@ var Booth = {
     Recorder.set_booth(this);
     scale_gifs_to_window();
   },
+  set_controller_path: function(path) {
+    Booth.path = path;
+  },
   start_camera: function() {
     Recorder.init();
   },
@@ -177,14 +182,16 @@ var Booth = {
   },
 
   addDance: function(dance) {
+    console.log("ADDING DANCE", dance, this);
+    var dance_url = this.path + "/" + dance + ".gif";
     var firstEl = $('#dances .dance:first-child');
     var clonedEl = firstEl.clone();
-    clonedEl.find("img").prop('src', dance);
+    clonedEl.find("img").prop('src', dance_url);
     $('#dances').prepend(clonedEl);
   },
   socket: function(socket) {
     socket.on('new_gif', function(data) {
-      Booth.addDance("/danceparty/" + data + ".gif");
+      Booth.addDance(data);
     });
   }
 };
@@ -231,4 +238,5 @@ $(window).on('resize', _.throttle(function() {
   scale_gifs_to_window();
 }, 200, { leading: false }));
 
+window.Booth = Booth;
 module.exports = Booth;

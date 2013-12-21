@@ -69,7 +69,7 @@ module.exports = {
 
   },
 
-  index: function() {
+  index: function(ctx, api) {
     this.set_title("DanceParty!");
     template.add_stylesheet("dance.css");
     fs.readdir(upload_dir, context.wrap(function(err, files) {
@@ -77,6 +77,8 @@ module.exports = {
       dancers = _.shuffle(dancers);
       dancers = _.first(dancers, 50);
       var template_str = template.render("controllers/danceparty.html.erb", { dancers: dancers });
+
+      api.bridge.controller("danceparty", "set_controller_path", ctx.controller_path);
       page.render({ content: template_str, socket: true});
     }));
 

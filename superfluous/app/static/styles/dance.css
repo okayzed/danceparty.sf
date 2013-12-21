@@ -36,6 +36,10 @@ body {
   }
 }
 
+.dance:last-child {
+  display: none;
+}
+
 .photobooth_wrapper {
   position: absolute;
   top: 0;
