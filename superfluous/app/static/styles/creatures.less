@@ -1,0 +1,116 @@
+//animations
+
+//blink animation
+@-webkit-keyframes blink {.blink-frames;}
+@-moz-keyframes blink {.blink-frames;}
+@-ms-keyframes blink {.blink-frames;}
+@-o-keyframes blink {.blink-frames;}
+@keyframes blink {.blink-frames;}
+
+.blink-frames(){
+    0%, 12%, 18%, 100% {
+        opacity: 1;
+        height: 5px;
+    }
+    15% {
+        opacity: 0;
+        height: 1px;
+    }
+}
+.blink{
+    -webkit-animation-name: blink;
+    animation-name: blink;
+    -webkit-animation-duration: 10s;
+    animation-duration: 10s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+}
+//wobble animation
+@-webkit-keyframes wobble {.wobble-frames;}
+@-moz-keyframes wobble {.wobble-frames;}
+@-ms-keyframes wobble {.wobble-frames;}
+@-o-keyframes wobble {.wobble-frames;}
+@keyframes wobble {.wobble-frames;}
+
+.wobble-frames(){
+    0%, 50%, 100% {
+        .rotate(0deg);
+    }
+    25%, 30% {
+        .rotate(20deg);
+    }
+}
+.wobble{
+    -webkit-animation-name: wobble;
+    animation-name: wobble;
+    -webkit-animation-duration: 5s;
+    animation-duration: 5s;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease;
+    animation-timing-function: ease;
+}
+//creatures
+.bird{
+    display: inline;
+    position: relative;
+    top: 35px;
+    .head{
+        width: 50px;
+        height: 50px;
+        .border-radiuses(50%, 50%, 50%, 10%);
+        background: @beige;
+        position: absolute;
+        left:0;
+        top: 0px;
+        .eye{
+            width: 3px;
+            height: 5px;
+            .border-radius(3px);
+            position: absolute;
+            left: 25%;
+            bottom: 50%;
+            background: @dk_gray;
+            &:nth-child(2){
+                left: 50%;
+            }
+        }
+        .beak{
+            position: absolute;
+            left: 0;
+            bottom: 6%;
+            width: 0;
+            height: 0;
+            border-color: transparent @beige - #333 @beige - #333 transparent;
+            border-width: 10px;
+            border-style: solid;
+            .rotate(-15deg);
+            .border-radius(10px)
+        }
+    }
+    .body{
+        width: 140px;
+        height: 100px;
+        .border-radiuses(0px, 250px, 300px, 340px, 0px, 290px, 290px, 100px);
+        background: @beige;
+        position: absolute;
+        left: 10px;
+        top: 40px;
+        .rotate(30deg);
+        z-index: 10;
+    }
+    .shadow{
+        width: 30px;
+        height: 30px;
+        .border-radius(30px);
+        background: rgba(0,0,0,.5);
+        position: absolute;
+        z-index: 1;
+        top: 130px;
+        left: 60px;
+        transform: skew(70deg, -15deg);
+        -webkit-transform: skew(70deg, -15deg);
+    }
+}

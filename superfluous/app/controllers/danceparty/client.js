@@ -5,6 +5,21 @@ var camera = require("app/static/vendor/camera");
 
 var DURATION = 1;
 var Booth;
+var boothText = {
+  "no-camera": "Activate your camera!",
+  "camera-ready": "Show us your moves!",
+  "recording": [
+    "Victory boogie woogie!",
+    "Pretend you're a dinosaur",
+    "Oh snap! Zombies!",
+    "You're in an 80s John Hughes film",
+    "Give us your most swashbuckling stance",
+    "Your archenemy is a wizard",
+    "Something really really really really really stinky happened"
+  ],
+  "gif-ready": "Upload?",
+  "processing": "One moment please..."
+};
 
 var Recorder = {
   duration: 1,
@@ -17,7 +32,6 @@ var Recorder = {
       height: 240,
       fps: this.fps,
       mirror: true,
-
       onFrame: $.proxy(this, 'onFrame'),
       onSuccess: $.proxy(this, 'onCameraSuccess'),
       onError: $.proxy(this, 'onCameraError'),
@@ -38,7 +52,7 @@ var Recorder = {
   onCameraNotSupported: function() {},
 
   record: function() {
-    console.log('recording');
+    //console.log('recording');
     this.booth.setState('recording', 0);
 
     setTimeout($.proxy(function() {
@@ -63,7 +77,7 @@ var Recorder = {
         camera.pause()
       } else {
         this.booth.setState('recording', curFrame / endFrame)
-        console.log('recording frame', this.gif.frames.length)
+        //console.log('recording frame', this.gif.frames.length)
         this.gif.addFrame(canvas, {
           copy: true,
           delay: Math.round(1000 / this.fps)
@@ -84,7 +98,12 @@ var Recorder = {
     var formData = new FormData()
     formData.append('moves', this.blob)
 
-    var url = (Booth.path) + '/upload';
+    var url;
+    if (Booth.path === '/') {
+      url = '/upload';
+    } else {
+      url = Booth.path + '/upload';
+    }
 
     $.ajax({
         url: url,
@@ -103,8 +122,10 @@ var Recorder = {
 
   onUploaded: function() {
     this._reset()
-    camera.stop()
-    this.booth.hide()
+    //camera.stop()
+    this.booth.hideBooth()
+    this.booth.setState('camera-ready')
+    this.redo();
   },
 
   redo: function() {
@@ -116,8 +137,7 @@ var Recorder = {
 
 var Booth = {
   events: {
-    "click #hide-booth" : "hide",
-    "click #show-booth" : "show",
+    "click #show-hide-booth" : "showOrHide",
     "click #start-camera" : "start_camera",
     "click #record" : "record",
     "click #upload-gif" : "upload",
@@ -129,12 +149,17 @@ var Booth = {
     this.$preview = this.$page.find("#preview");
     this.$photobooth = this.$page.find("#photobooth");
     this.$photobooth_wrapper = this.$page.find(".photobooth_wrapper");
+    this.$show_hide_btn = this.$page.find("#show-hide-booth");
 
     // Why we gotta copy this?
-    this.show();
+    this.showBooth();
     this.setState('no-camera');
     Recorder.set_booth(this);
-    scale_gifs_to_window();
+
+    var readyContainer = this.$page.find('#ready-container');
+    readyContainer.fadeOut();
+    Recorder.init();
+
   },
   set_controller_path: function(path) {
     Booth.path = path;
@@ -144,32 +169,59 @@ var Booth = {
   },
   record: function() {
     Recorder.record();
+    this.$page.find('#dances').fadeOut();
   },
   upload: function() {
     Recorder.upload();
-    $("#show-booth").hide();
+    this.$page.find('#dances').fadeIn();
   },
   redo: function() {
     Recorder.redo();
   },
 
-  show: function() {
+  showBooth: function() {
     this.$photobooth.addClass('active');
     this.$photobooth_wrapper.show();
+    this.$show_hide_btn.text('hide booth').removeClass('show');
   },
 
-  hide: function(el) {
+  hideBooth: function(el) {
     this.$photobooth.removeClass('active');
     this.$photobooth_wrapper.hide();
+    this.$show_hide_btn.text('show booth').addClass('show');
+  },
+  showOrHide: function(el){
+    if (this.$photobooth.is(':visible')){
+      if(!$('#dances').is(':visible')){
+        $('#dances').fadeIn();
+      }
+      this.hideBooth();
+    } else {
+      this.showBooth();
+    }
   },
 
   setState: function(state, progress) {
     this.$photobooth.removeClass('state-' + this.state)
+    if (this.state != state) {
+      this.$photobooth.children('h1').text(SetBoothMessage(state, progress));
+    }
     this.state = state
     this.$photobooth.addClass('state-' + state)
-
+    
     if (state == 'recording' && progress != null) {
       this.$el.find('#record').css('width', 100 * progress + '%')
+
+    }
+    function SetBoothMessage(state, progress){
+      var message = boothText[state];
+      if (state == 'recording' && progress === 0){
+        var numMsg = boothText[state].length;
+        var randNum = Math.floor((Math.random()*numMsg));
+        var randMsg = boothText[state][randNum];
+        message = randMsg;
+      }
+      return message;
     }
   },
 
@@ -183,11 +235,16 @@ var Booth = {
 
   addDance: function(dance) {
     console.log("ADDING DANCE", dance, this);
-    var dance_url = this.path + "/" + dance + ".gif";
-    var firstEl = $('#dances .dance:first-child');
-    var clonedEl = firstEl.clone();
-    clonedEl.find("img").prop('src', dance_url);
-    $('#dances').prepend(clonedEl);
+    var dance_url;
+    if (Booth.path === "/") {
+      dance_url = "/" + dance + ".gif";
+    } else {
+      dance_url = Booth.path + "/" + dance + ".gif";
+    }
+    var newDanceEl = $('<div class="dance"><img class="dancer" title="" /></div>');
+
+    newDanceEl.find("img").prop('src', dance_url);
+    $('#dances').prepend(newDanceEl);
   },
   socket: function(socket) {
     socket.on('new_gif', function(data) {
@@ -196,47 +253,7 @@ var Booth = {
   }
 };
 
-// The dance grid should scale its elements based on the size of the viewport
-function scale_gifs_to_window() {
-  var width = $(window).width();
-  var height = $(window).height();
-  console.log("SCALING GIFS TO WINDOW", width, height);
 
-  // some GIF sizes...
-  var preferred_sizes = [ 300, 280, 350, 400, 450, 500, 300, 500 ];
-  var operated = false;
-  _.each(preferred_sizes, function(s) {
-    if (operated) {
-      return;
-    }
-
-
-    var gif_number = parseInt(width / s, 10);
-    var gif_size = width / gif_number;
-    var big_gif_size = width / (gif_number - 1);
-
-    var delta = Math.abs(gif_size - s);
-    if (delta < 50) {
-      $("img.dancer").width(gif_size);
-      // we did it, time to move on
-      operated = true;
-    }
-
-    delta = Math.abs(big_gif_size - s);
-    if (delta < 40 && !operated) {
-      $("img.dancer").width(big_gif_size);
-      // we did it, time to move on
-      operated = true;
-    }
-  });
-
-}
-
-$("body").css("overflow", "hidden");
-
-$(window).on('resize', _.throttle(function() {
-  scale_gifs_to_window();
-}, 200, { leading: false }));
 
 window.Booth = Booth;
 module.exports = Booth;

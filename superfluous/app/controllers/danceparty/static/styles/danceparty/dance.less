@@ -1,11 +1,3 @@
-.transition (@property, @duration, @function: ease, @delay: 0s) {
-    -webkit-transition: @arguments;
-    -moz-transition: @arguments;
-    -o-transition: @arguments;
-    -ms-transition: @arguments;
-    transition: @arguments;
-}
-
 .fill-parent {
   display: block;
   position: absolute;
@@ -18,61 +10,70 @@
 body {
   margin: 0;
   font-family: sans-serif;
+  background: @dk_gray;
+  overflow-x: hidden;
 }
 
-//.dancer { width: 160; height: 120; }
+
 #dances {
-  overflow: hidden;
+  overflow-x: hidden;
 
   .dance {
     position: relative;
-    margin: -2px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin: 0;
+    float:left;
     display: inline-block;
+    width: 33.33%;
+    
+  }
+  .dancer{
+    width: 100%;
+    height: auto;
   }
 
-  .dancer {
+}
+@media (max-width: 768px) {
+  #dances .dance{
+    width: 50%;
   }
 }
-
+@media (min-width: 2000px) {
+  #dances .dance{
+    width: 12.5%;
+  } 
+}
+@media (min-width: 1200px) and (max-width: 1999px) {
+  #dances .dance{
+    width: 25%;
+  }
+}
 .dance:last-child {
   display: none;
 }
-
-.photobooth_wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+.photobooth_wrapper{
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  margin-left: -185px;
+  width: 370px;
 }
-
 #photobooth {
+  .box-sizing();
   @padding: 25px;
-  position: absolute;
   background: white;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  width: 320px;
-  height: 370px;
   padding: @padding;
   border-radius: 10px;
-  box-shadow:
-    0 0 25px black;
+  box-shadow: 0 0 25px rgba(0,0,0,.5);
   text-align: center;
   z-index: 5;
+  max-width: 100%;
   display: none;
-  white-space: nowrap;
-
   &.active {
     display: block;
   }
 
   h1 {
+    word-wrap: break-word;
     margin: 0;
     margin-bottom: @padding;
     font-size: 1.75em;
@@ -81,8 +82,18 @@ body {
 
   .btn {
     display: none;
-    margin: @padding 10px;
+    margin: @padding 10px 0;
     font-size: 1.5em;
+    background: @lt_gray;
+    &#start-camera{
+      background: @lt_green;
+    }
+    &#redo-gif {
+      background: @gray;
+    }
+    &#upload-gif {
+      background: @lt_green;
+    }
   }
 
   #preview {
@@ -92,6 +103,7 @@ body {
     background: #eee;
     border-radius: 5px;
     overflow: hidden;
+    margin: 0 auto;
 
     &:after {
       content: '';
@@ -106,12 +118,9 @@ body {
     }
   }
 
-  .btn#hide-booth {
-    background: gray;
-  }
 
   &.state-no-camera {
-    .btn#start-camera, .btn#hide-booth {
+    .btn#start-camera{
       display: inline-block;
     }
 
@@ -149,29 +158,21 @@ body {
   &.state-recording {
     .btn#record {
       display: inline-block;
-      background: lightgreen;
+      background: @lt_green;
     }
   }
 
   &.state-processing {
     .btn#record {
       display: inline-block;
-      background: lightgreen;
+      background: @lt_green;
     }
-  }
-
-  .btn#redo-gif {
-    background: gray;
-  }
-
-  .btn#upload-gif {
-    background: green;
   }
 
   &.state-gif-ready {
     box-shadow:
       0 0 25px black,
-      0 0 300px 100px fade(lightgreen, 50%);
+      0 0 300px 100px fade(@lt_green, 50%);
 
     #preview .gif {
       opacity: 1;
@@ -188,9 +189,9 @@ body {
   color: white;
 }
 
-.btn#show-booth {
+.btn#show-hide-booth {
   background: gray;
-  position: absolute;
+  position: fixed;
   right: 20px;
   bottom: 20px;
   display: block;
@@ -198,5 +199,30 @@ body {
   &:active {
     display: block;
   }
+  &.show{
+    background: @lt_green;
+  }
 }
 
+#ready-container{
+  .bg-radial-gradient(#f2f5f6, #c8d7dc, #e3eaed, 37%);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  .active{
+    color: @red;
+    display: block;
+    &.rotateOut{
+      font-size: 10em;
+    }
+  }
+  .inactive{
+    color: @gray;
+    &.rotateOut{
+      display: none;
+    }
+  }
+}

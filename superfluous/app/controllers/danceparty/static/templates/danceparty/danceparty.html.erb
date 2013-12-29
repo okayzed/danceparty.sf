@@ -1,0 +1,22 @@
+<% add_stylesheet("danceparty/animate") %>
+<% set_default("dancers", []) %>
+<div class="clearfix" id="dances">
+  <% _.each(dancers, function(dance) { %>
+    <div class="dance">
+      <img class="dancer" src="<%= url_for('danceparty.get_dance', {id:dance}) %>" title="" />
+    </div>
+  <% }); %>
+</div>
+<div class="photobooth_wrapper">
+  <div id="photobooth" class="clearfix text-center">
+    <h1>show me your moves!</h1>
+    <div id="preview">
+      <img class="gif">
+    </div>
+    <!--div class="btn" id="start-camera">start the camera!</div-->
+    <div class="btn" id="record">let's dance!</div>
+    <div class="btn" id="redo-gif">redo</div>
+    <div class="btn" id="upload-gif">upload</div>
+  </div>
+</div>
+<div class="btn" id="show-hide-booth">hide booth</div>

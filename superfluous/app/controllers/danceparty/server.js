@@ -22,6 +22,7 @@ var upload_dir = "app/static/uploads/";
 fs.mkdir(upload_dir, function() {});
 
 module.exports = {
+  is_package: true,
   routes: {
     "" : "index",
     "/:id" : "get_dance"
@@ -71,12 +72,12 @@ module.exports = {
 
   index: function(ctx, api) {
     this.set_title("DanceParty!");
-    template.add_stylesheet("dance.css");
+    template.add_stylesheet("danceparty/dance");
     fs.readdir(upload_dir, context.wrap(function(err, files) {
       var dancers = _.filter(files, function(f) { return f.match("gif$"); });
       dancers = _.shuffle(dancers);
       dancers = _.first(dancers, 50);
-      var template_str = template.render("controllers/danceparty.html.erb", { dancers: dancers });
+      var template_str = template.render("danceparty/danceparty.html.erb", { dancers: dancers });
 
       api.bridge.controller("danceparty", "set_controller_path", ctx.controller_path);
       page.render({ content: template_str, socket: true});
